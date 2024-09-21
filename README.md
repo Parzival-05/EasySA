@@ -1,1 +1,1 @@
-# StreamAlertsBot
+# EasySA
