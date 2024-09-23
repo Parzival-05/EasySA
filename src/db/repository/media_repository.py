@@ -33,3 +33,6 @@ class MediaSessionRepository(Repository):
                 await self.add(post)
         await self.add(media_session)
         return True
+
+    async def delete(self, **filters) -> int:
+        return self.db_session.query(self.MODEL).filter_by(**filters).delete()

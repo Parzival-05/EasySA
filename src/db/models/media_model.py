@@ -16,7 +16,7 @@ class MediaPlatformModel(BaseModel):
     __tablename__ = "media_platforms"
     name = Column(Enum(MediaPlatformNames), primary_key=True)
     media_sessions: Mapped[list["MediaSessionModel"]] = relationship(
-        back_populates="media_platform"
+        back_populates="media_platform", cascade="all, delete-orphan"
     )
 
 
@@ -36,11 +36,11 @@ class MediaSessionModel(BaseIDModel):
     is_active = Column(Boolean)
 
     streamers: Mapped[list["StreamerModel"]] = relationship(
-        back_populates="media_sessions", secondary="streamer_media_session_join"
+        back_populates="media_sessions", secondary="streamer_media_session_join", cascade="all, delete"
     )
     posts: Mapped[list["PostModel"]] = relationship(
-        back_populates="media_sessions", secondary="post_media_session_join"
+        back_populates="media_sessions", secondary="post_media_session_join", cascade="all, delete"
     )
     published_posts: Mapped[list["PublishedPostModel"]] = relationship(
-        back_populates="media_session"
+        back_populates="media_session", cascade="all, delete-orphan"
     )
