@@ -11,7 +11,7 @@ from src.domain.stream_platforms.stream_platform_names import (
 if TYPE_CHECKING:
     from src.db.models.media_model import MediaSessionModel
     from src.db.models.platform_model import StreamPlatformModel
-    from src.db.models.post_model import PostModel, PublishedPostModel
+    from src.db.models.post_model import PostModel
 
 
 class StreamerModel(BaseIDModel):
@@ -25,7 +25,7 @@ class StreamerModel(BaseIDModel):
     )
     profile_id = Column(String)
     media_sessions: Mapped[list["MediaSessionModel"]] = relationship(
-        back_populates="streamers", secondary="streamer_media_session_join"
+        back_populates="streamers", secondary="streamer_media_session_join", cascade="all, delete"
     )
-    posts: Mapped[list["PostModel"]] = relationship(back_populates="streamer")
+    posts: Mapped[list["PostModel"]] = relationship(back_populates="streamer", cascade="all, delete-orphan")
     is_active = Column(Boolean)
