@@ -1,4 +1,4 @@
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Column, String, ForeignKey, Boolean, DateTime, func, Integer
 from sqlalchemy.orm import relationship, Mapped, mapped_column
@@ -14,9 +14,9 @@ class PostModel(BaseIDModel):
     __tablename__ = "posts"
     name = Column(String)
     text = Column(String)
-    preview: Mapped[Optional["PreviewModel"]] = relationship(back_populates="post", cascade="all, delete-orphan")
-    buttons_info: Mapped[Optional["ButtonsInfoModel"]] = relationship(
-        back_populates="post", cascade="all, delete-orphan"
+    preview: Mapped["PreviewModel"] = relationship(back_populates="post", cascade="all, delete", uselist=False)
+    buttons_info: Mapped["ButtonsInfoModel"] = relationship(
+        back_populates="post", cascade="all, delete"
     )
     is_active = Column(Boolean)
 
@@ -28,22 +28,22 @@ class PostModel(BaseIDModel):
         cascade="all, delete"
     )
     published_posts: Mapped[list["PublishedPostModel"]] = relationship(
-        back_populates="post",cascade="all, delete-orphan"
+        back_populates="post", cascade="all, delete-orphan"
     )
 
 
 class PreviewModel(BaseIDModel):
     __tablename__ = "previews"
-    file_path = Column(String)
+    file_path = Column(String, nullable=True)
     post_id: Mapped[int] = mapped_column(ForeignKey("posts.id", ondelete="CASCADE"))
-    post: Mapped["PostModel"] = relationship(back_populates="preview")
+    post: Mapped["PostModel"] = relationship(back_populates="preview", single_parent=True)
 
 
 class ButtonsInfoModel(BaseIDModel):
     __tablename__ = "buttons_infos"
-    buttons_info = Column(String)
+    buttons_info = Column(String, nullable=True)
     post_id: Mapped[int] = mapped_column(ForeignKey("posts.id", ondelete="CASCADE"))
-    post: Mapped["PostModel"] = relationship(back_populates="buttons_info")
+    post: Mapped["PostModel"] = relationship(back_populates="buttons_info", single_parent=True)
 
 
 class PublishedPostModel(BaseModel):
