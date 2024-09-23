@@ -1,17 +1,16 @@
 """add initial data
 
-Revision ID: d8af3072516c
-Revises: 7e7a1b6c9619
-Create Date: 2024-09-22 00:53:09.470274
+Revision ID: a9bb2beaf798
+Revises: 24f698525a5c
+Create Date: 2024-09-24 00:02:57.169314
 
 """
-
 import asyncio
 from typing import Sequence, Union
 
 # revision identifiers, used by Alembic.
-revision: str = "d8af3072516c"
-down_revision: Union[str, None] = "7e7a1b6c9619"
+revision: str = 'a9bb2beaf798'
+down_revision: Union[str, None] = '24f698525a5c'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

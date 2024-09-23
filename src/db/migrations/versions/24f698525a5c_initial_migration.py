@@ -1,8 +1,8 @@
 """initial migration
 
-Revision ID: 7e7a1b6c9619
-Revises:
-Create Date: 2024-09-22 00:52:59.382164
+Revision ID: 24f698525a5c
+Revises: 
+Create Date: 2024-09-24 00:02:49.706655
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '7e7a1b6c9619'
+revision: str = '24f698525a5c'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -65,39 +65,37 @@ def upgrade() -> None:
     sa.Column('is_active', sa.Boolean(), nullable=True),
     sa.Column('streamer_id', sa.Integer(), nullable=False),
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.ForeignKeyConstraint(['streamer_id'], ['streamers.id'], ),
+    sa.ForeignKeyConstraint(['streamer_id'], ['streamers.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('streamer_media_session_join',
-    sa.Column('streamer_id', sa.Integer(), nullable=True),
-    sa.Column('media_session_id', sa.Integer(), nullable=True),
+    sa.Column('streamer_id', sa.Integer(), nullable=False),
+    sa.Column('media_session_id', sa.Integer(), nullable=False),
     sa.Column('is_active', sa.Boolean(), nullable=True),
-    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.ForeignKeyConstraint(['media_session_id'], ['media_platform_sessions.id'], ),
-    sa.ForeignKeyConstraint(['streamer_id'], ['streamers.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.ForeignKeyConstraint(['media_session_id'], ['media_platform_sessions.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['streamer_id'], ['streamers.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('streamer_id', 'media_session_id')
     )
     op.create_table('buttons_infos',
     sa.Column('buttons_info', sa.String(), nullable=True),
     sa.Column('post_id', sa.Integer(), nullable=False),
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.ForeignKeyConstraint(['post_id'], ['posts.id'], ),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('post_media_session_join',
-    sa.Column('post_id', sa.Integer(), nullable=True),
-    sa.Column('media_session_id', sa.Integer(), nullable=True),
-    sa.Column('is_active', sa.Boolean(), nullable=True),
-    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.ForeignKeyConstraint(['media_session_id'], ['media_platform_sessions.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['post_id'], ['posts.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('post_media_session_join',
+    sa.Column('post_id', sa.Integer(), nullable=False),
+    sa.Column('media_session_id', sa.Integer(), nullable=False),
+    sa.Column('is_active', sa.Boolean(), nullable=True),
+    sa.ForeignKeyConstraint(['media_session_id'], ['media_platform_sessions.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['post_id'], ['posts.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('post_id', 'media_session_id')
+    )
     op.create_table('previews',
     sa.Column('file_path', sa.String(), nullable=True),
-    sa.Column('post_id', sa.Integer(), nullable=True),
+    sa.Column('post_id', sa.Integer(), nullable=False),
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
-    sa.ForeignKeyConstraint(['post_id'], ['posts.id'], ),
+    sa.ForeignKeyConstraint(['post_id'], ['posts.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('published_posts',
@@ -106,8 +104,8 @@ def upgrade() -> None:
     sa.Column('post_id', sa.Integer(), nullable=True),
     sa.Column('media_session_id', sa.Integer(), nullable=True),
     sa.Column('timestamp', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
-    sa.ForeignKeyConstraint(['media_session_id'], ['media_platform_sessions.id'], ),
-    sa.ForeignKeyConstraint(['post_id'], ['posts.id'], ),
+    sa.ForeignKeyConstraint(['media_session_id'], ['media_platform_sessions.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['post_id'], ['posts.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
