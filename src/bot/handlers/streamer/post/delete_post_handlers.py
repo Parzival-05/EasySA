@@ -36,11 +36,10 @@ async def delete(
         text = "Удаление отменено."
         go_back_button = get_post_back_button(post)
     else:
-        await post_repository.set_as_inactive(post)
-        await post_repository.delete(id=post_id)
-        await post_repository.commit()
         text = f"Пост {post.name} стримера {post.streamer.name} удален."
         go_back_button = get_streamer_back_button(post.streamer)
+        await post_repository.delete(id=post_id)
+        await post_repository.commit()
     reply_markup = await get_reply_markup(None, go_back_button)
     await callback_query.message.edit_text(
         text=text,
