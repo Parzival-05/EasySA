@@ -1,3 +1,5 @@
+from src.checker.utils import remove_quotes
+from src.db.models.media_model import MediaSessionModel, MediaPlatformModel
 from src.domain.media_platforms.errors import IncorrectMediaProfileFormatInput
 from src.domain.media_platforms.profiles.base_media_profile import (
     BaseMediaProfile,
@@ -5,8 +7,6 @@ from src.domain.media_platforms.profiles.base_media_profile import (
     BaseMediaProfileValidator,
     BaseMediaProfileInfo,
 )
-from src.checker.utils import remove_quotes
-from src.db.models.media_model import MediaSessionModel, MediaPlatformModel
 
 
 class TelegramProfileInfo(BaseMediaProfileInfo):
@@ -14,7 +14,7 @@ class TelegramProfileInfo(BaseMediaProfileInfo):
     bot_token: str
 
     def create_model(
-        self, name: str, media_platform: MediaPlatformModel, is_active: bool = True
+            self, name: str, media_platform: MediaPlatformModel, is_active: bool = True
     ) -> MediaSessionModel:
         return MediaSessionModel(
             name=name,
@@ -47,7 +47,6 @@ class TelegramMediaProfileValidator(BaseMediaProfileValidator):
 
 
 class TelegramMediaProfile(BaseMediaProfile):
-
     PROFILE_INFO = TelegramProfileInfo
     PROFILE_INFO_PARSER = TelegramProfileInfoParser
     VALIDATOR = TelegramMediaProfileValidator
@@ -56,8 +55,14 @@ class TelegramMediaProfile(BaseMediaProfile):
     def help():
         return (
             "Введите информацию о TG-канале в следующем формате, разделяя переносом строки: \n"
-            "- Уникальный user id канала\n"
+            "- Уникальный user id канала (тэг)\n"
             "- Токен бота из BotFather\n"
+            "\n"
+            "----------------------------\n"
+            "Как получить эти данные:\n"
+            "1. Создайте бота через BotFather: https://t.me/BotFather\n"
+            '2. Зайдите в канал, найдите "управление каналом", "Администраторы", добавьте созданного бота в качестве '
+            'администратора.'
         )
 
     @staticmethod
