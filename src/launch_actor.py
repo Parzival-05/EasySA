@@ -48,7 +48,7 @@ async def send_message():
                 continue
             media_actor_class = get_media_actor_class(media_session.media_name)
             media_actor = media_actor_class(post, streamer, media_session, stream_info)
-            is_posted = media_actor.send_post()
+            is_posted = await media_actor.send_post()
             if is_posted:
                 logging_message = (
                     f"Successfully posted {post.name} of streamer {streamer.name} in media {media_session.media_name} "
