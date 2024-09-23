@@ -66,7 +66,7 @@
 стримеров (социальные сети, мессенджеры, ...). При обнаружении активности стримера, настроенные посты сразу публикуются
 в указанных пользователем медиа.
 
-В настоящее время приложение поддерживает следующие платформы потоковой передачи:
+В настоящее время приложение поддерживает следующие стриминг платформы:
 
 - Twitch
 
@@ -94,20 +94,21 @@
 ### Инструкции по запуску и настройке для Windows
 
 1. `git clone https://github.com/Parzival-05/EasySA`
-2. Создать venv:
+2. `cd EasySA`
+3. Создать venv:
     1. `python -m pip install virtualenv`
-    2. `python -m virtualenv .env`
-    3. `source .env/bin/activate`
-3. `pip install -r requirements.txt`
-4. `alembic upgrade head`
-5. Получить токен вашего телеграм-бота с помощью [BotFather](https://t.me/BotFather). Заполните файл .env:
+    2. `python -m virtualenv .venv`
+    3. `.venv\Scripts\activate`
+4. `pip install -r requirements.txt`
+5. `alembic upgrade head`
+6. Получить токен вашего телеграм-бота с помощью [BotFather](https://t.me/BotFather). Создайте и заполните файл .env:
     ```
    BOT_TOKEN_API = '...'
     ```
-6. Для интеграции со стриминг платформами необходимо ввести некоторые учетные данные
+7. Для интеграции со стриминг платформами необходимо ввести некоторые учетные данные
    в файл .env (см. ниже как).
-7. Заполните поле `ADMIN_IDS` в config.py.
-8. Запуск: `python main.py`
+8. Заполните поле `ADMIN_IDS` в config.py.
+9. Запуск: `python main.py`
 
 ### Интеграция с Twitch
 
@@ -115,8 +116,9 @@
 
 1. Зарегистрируйте свое приложение по инструкции: https://twitch4j.github.io/rest-helix/:
     1. Нужно будет включить авторизацию через OAuth2.
-    2. Указывать поле "OAuth Redirect URL" не нужно, можно оставить пустым.
+    2. Укажите в поле "OAuth Redirect URL" "http://localhost", не нажимая "Добавить".
     3. Выберите любую категорию приложения.
+    4. Нажмите "Создать".
 2. В консоли (https://dev.twitch.tv/console) выберите свое приложение, скопируйте client id и client secret.
 3. Заполните файл .env:
     ```
@@ -216,20 +218,20 @@ And the following media platforms:
 ### Windows-specific startup instructions
 
 1. `git clone https://github.com/Parzival-05/EasySA`
-   Please read the information about the specific platform below.
-2. Create venv:
+2. `cd EasySA`
+3. Create venv:
     1. `python -m pip install virtualenv`
-    2. `python -m virtualenv .env`
-    3. `source .env/bin/activate`
-3. `pip install -r requirements.txt`
-4. `alembic upgrade head`
-5. Get token of your telegram bot with [BotFather](https://t.me/BotFather). Fill the .env file:
+    2. `python -m virtualenv .venv`
+    3. `.venv\Scripts\activate`
+4. `pip install -r requirements.txt`
+5. `alembic upgrade head`
+6. Get token of your telegram bot with [BotFather](https://t.me/BotFather). Create and fill the .env file:
     ```env
     BOT_TOKEN_API = '...'
     ```
-6. To integrate with streaming platforms, you first need to enter some credentials into the env file (see below how to).
-7. Fill the `ADMIN_IDS` field in `config.py`.
-8. Running: `python main.py`
+7. To integrate with streaming platforms, you first need to enter some credentials into the env file (see below how to).
+8. Fill the `ADMIN_IDS` field in `config.py`.
+9. Running: `python main.py`
 
 ### Twitch integration
 
@@ -238,8 +240,9 @@ You need to get **client id** and **client secret** of app.
 
 1. Register your app: follow the next steps: https://twitch4j.github.io/rest-helix/:
     1. You will need to enable authorization via OAuth2.
-    2. You don't need to specify "OAuth Redirect URL" field.
+    2. Specify the "OAuth Redirect URL" field with "http://localhost", without clicking "Add".
     3. Select any category of app.
+    4. Click "Submit".
 2. In [the console](https://dev.twitch.tv/console) select your app and copy the **client id** and **client secret**.
 3. Fill the .env file:
     ```env
