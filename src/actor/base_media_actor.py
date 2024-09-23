@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from pathlib import Path
 from typing import TypeVar, Optional
 
 from src.db.models.media_model import MediaSessionModel
@@ -12,11 +11,11 @@ T = TypeVar("T")
 
 class BaseMediaActor(ABC):
     def __init__(
-        self,
-        post: PostModel,
-        streamer: StreamerModel,
-        media_session: MediaSessionModel,
-        stream_info: StreamInfo,
+            self,
+            post: PostModel,
+            streamer: StreamerModel,
+            media_session: MediaSessionModel,
+            stream_info: StreamInfo,
     ):
         self.post = post
         self.streamer = streamer
@@ -26,6 +25,7 @@ class BaseMediaActor(ABC):
     @property
     @abstractmethod
     def CHAT_ID_TYPE(self) -> T: ...
+
     @abstractmethod
     def get_chat_id(self) -> Optional[CHAT_ID_TYPE]: ...
 
@@ -33,16 +33,12 @@ class BaseMediaActor(ABC):
     def _get_text(self): ...
 
     @abstractmethod
-    def _send_post(
-        self, chat_id: CHAT_ID_TYPE, text: str, photo: Optional[str] = None, **kwargs
+    async def _send_post(
+            self, chat_id: CHAT_ID_TYPE, text: str, photo: Optional[str] = None, **kwargs
     ): ...
 
-    def send_post(self):
+    async def send_post(self):
         chat_id = self.get_chat_id()
         text = self._get_text()
-        preview = (
-            self.post.preview.file_path
-            if self.post.preview
-            else self.stream_info.preview
-        )
-        return self._send_post(chat_id, text, preview)
+        preview = self.post.preview.file_path if self.post.preview.file_path else self.stream_info.preview
+        return await self._send_post(chat_id, text, preview)

@@ -30,7 +30,7 @@ class DiscordActor(BaseMediaActor):
         }
         return self.post.text.format(**d)
 
-    def _send_post(
+    async def _send_post(
         self, chat_id: CHAT_ID_TYPE, text: str, photo: Optional[str] = None, **kwargs
     ):
         payload = {"content": text}
