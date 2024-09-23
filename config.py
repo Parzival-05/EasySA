@@ -16,7 +16,7 @@ class AppConfig:
 
 
 class TGBotConfig:
-    ADMIN_IDS = []  # Enter your TG ID
+    ADMIN_IDS = []  # Enter your TG ID: https://t.me/getmyid_bot
 
 
 class ActorConfig:
