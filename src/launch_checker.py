@@ -17,7 +17,7 @@ BaseModel.metadata.create_all(engine)
 
 
 async def loop_checking(
-    stream_platform_sessions: list[BaseStreamPlatformSession], db_session: Session
+        stream_platform_sessions: list[BaseStreamPlatformSession], db_session: Session
 ):
     checker = Checker(
         db_session=db_session, stream_platform_sessions=stream_platform_sessions

@@ -138,7 +138,7 @@
   <h3 align="center">EasySA</h3>
 
   <p align="center">
-    Telegram-wrapped app for auto-posting information about the beginning of streams to streamers' personal media 
+    Telegram-wrapped app for auto-posting information about the beginning of streams to streamers' personal media
 (social networks, messengers, ...)
   </p>
   <p align="center">
@@ -312,5 +312,3 @@ Distributed under the MIT License. See `LICENSE` for more information.
 David - parzivalwasd@gmail.com
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
