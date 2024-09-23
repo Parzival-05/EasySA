@@ -29,7 +29,7 @@ from src.db.repository.streamer_repository import StreamerRepository
 
 @post_router.callback_query(AddPostCD.filter())
 async def add_post(
-    callback_query: CallbackQuery, state: FSMContext, callback_data: AddPostCD
+        callback_query: CallbackQuery, state: FSMContext, callback_data: AddPostCD
 ):
     await state.update_data(streamer_id=callback_data.streamer_id)
     await state.set_state(AddPostState.ADD_NAME)
@@ -53,11 +53,11 @@ async def add_name(message: Message, db_session: Session, state: FSMContext):
     await state.set_state(AddPostState.ADD_TEXT)
     await message.answer(
         text="Введите текст поста.\n\n"
-        "Доступные переменные:\n"
-        + "\n".join(f"• {post.value.var}: {post.value.info}" for post in PostVariables)
-        + "\n\nДля доступа к переменным ограничивайте их фигурными скобками. Например, так: {"
-        + PostVariables.STREAM_TITLE.value.var
-        + "}."
+             "Доступные переменные:\n"
+             + "\n".join(f"• {post.value.var}: {post.value.info}" for post in PostVariables)
+             + "\n\nДля доступа к переменным ограничивайте их фигурными скобками. Например, так: {"
+             + PostVariables.STREAM_TITLE.value.var
+             + "}."
     )
 
 
@@ -73,10 +73,10 @@ async def add_text(message: Message, state: FSMContext):
 
 
 async def create_post(
-    message: Message,
-    db_session: Session,
-    state: FSMContext,
-    context_data: dict,
+        message: Message,
+        db_session: Session,
+        state: FSMContext,
+        context_data: dict,
 ):
     file_path = context_data.get("file_path")
     streamer_repository = StreamerRepository(db_session)
@@ -88,11 +88,9 @@ async def create_post(
         text=context_data.get("text"),
         media_sessions=[],
     )
-    if file_path:
-        preview = PreviewModel(file_path=file_path, post=post)
-        post.preview = preview
-        await post_repository.add(preview)
-    await post_repository.add(post)
+    preview = PreviewModel(file_path=file_path, post=post)
+    await post_repository.add_all([post, preview])
+    await post_repository.commit()
     post_media_session_join_repository = PostMediaSessionJoinRepository(db_session)
     for media_session in streamer.media_sessions:
         post_media_session_join = PostMediaSessionJoin(
@@ -109,7 +107,7 @@ async def create_post(
 @post_router.callback_query(
     GetPostPreviewTypeCD.filter(F.post_preview_button == PostPreviewButtons.ADD_PREVIEW)
 )
-async def add_custom_media(callback_query: CallbackQuery, state: FSMContext):
+async def add_custom_media_intent(callback_query: CallbackQuery, state: FSMContext):
     await state.set_state(AddPostState.ADD_CUSTOM_PREVIEW)
     await callback_query.message.edit_text(text="Отправьте изображение")
 
@@ -118,14 +116,14 @@ async def add_custom_media(callback_query: CallbackQuery, state: FSMContext):
     F.photo,
     AddPostState.ADD_CUSTOM_PREVIEW,
 )
-async def add_custom_media_intent(
-    message: Message, db_session: Session, state: FSMContext
+async def add_custom_media(
+        message: Message, db_session: Session, state: FSMContext
 ):
     context_data = await state.get_data()
     file_path = (
-        CommonConfig.POST_PREVIEWS_PATH
-        + f"{context_data.get('streamer_id')}"
-        + f"{context_data.get('name')}.jpg"
+            CommonConfig.POST_PREVIEWS_PATH
+            + f"{context_data.get('streamer_id')}"
+            + f"{context_data.get('name')}.jpg"
     )
     await message.bot.download(file=message.photo[-1].file_id, destination=file_path)
     await state.update_data(file_path=file_path)
@@ -133,7 +131,7 @@ async def add_custom_media_intent(
         message=message,
         db_session=db_session,
         state=state,
-        context_data=context_data,
+        context_data=await state.get_data(),
     )
 
 
@@ -144,7 +142,7 @@ async def add_custom_media_intent(
     AddPostState.ADD_CUSTOM_PREVIEW,
 )
 async def add_media_preview(
-    callback_query: CallbackQuery, db_session: Session, state: FSMContext
+        callback_query: CallbackQuery, db_session: Session, state: FSMContext
 ):
     await state.update_data(file_path=None)
     await create_post(
