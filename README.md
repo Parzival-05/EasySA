@@ -108,7 +108,7 @@
 7. Для интеграции со стриминг платформами необходимо ввести некоторые учетные данные
    в файл .env (см. ниже как).
 8. Заполните поле `ADMIN_IDS` в `.env`: введите ID, разделенные запятыми, из https://t.me/getmyid_bot.
-9. Запуск: `python main.py`
+9. Запуск: `python main.py` (возможно, потребуются права администратора).
 
 ### Интеграция с Twitch
 
@@ -231,7 +231,7 @@ And the following media platforms:
     ```
 7. To integrate with streaming platforms, you first need to enter some credentials into the env file (see below how to).
 8. Fill the `ADMIN_IDS` field in `.env`: enter the comma-separated IDs from https://t.me/getmyid_bot.
-9. Running: `python main.py`
+9. Running: `python main.py` (you may need administrator rights).
 
 ### Twitch integration
 
