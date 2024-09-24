@@ -15,9 +15,5 @@ class AppConfig:
     REQUESTS_TIMEOUT = 0.1
 
 
-class TGBotConfig:
-    ADMIN_IDS = []  # Enter your TG ID: https://t.me/getmyid_bot
-
-
 class ActorConfig:
     PORT = 35000
