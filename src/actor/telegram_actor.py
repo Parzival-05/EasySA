@@ -1,13 +1,30 @@
 import logging
-from pathlib import Path
 from typing import Optional
 
-import telebot
+from aiogram import Bot
+from aiogram.enums import ParseMode
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, FSInputFile
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from src.actor.base_media_actor import BaseMediaActor
 from src.checker.post_info import PostVariables
+from src.db.models.post_model import ButtonsInfoModel
+from src.domain.media_platforms.buttons import ButtonsParser, Button
 from src.domain.stream_platforms.get_by_name import get_stream_platform_profile_class
 from src.domain.stream_platforms.profiles.base_stream_profile import StreamProfileInfo
+
+
+async def generate_buttons_markup(buttons_info: ButtonsInfoModel) -> InlineKeyboardMarkup:
+    buttons = await ButtonsParser(buttons_info.buttons_info).parse()
+
+    def map_to_inline_keyboard_button(button: Button) -> InlineKeyboardButton:
+        return InlineKeyboardButton(text=button.text, url=button.url)
+
+    def map_row_to_inline_keyboard_button_row(row: list[Button]) -> list[InlineKeyboardButton]:
+        return list(map(map_to_inline_keyboard_button, row))
+
+    keyboard_builder = InlineKeyboardBuilder(list(map(map_row_to_inline_keyboard_button_row, buttons)))
+    return keyboard_builder.as_markup(resize_keyboard=True)
 
 
 class TelegramActor(BaseMediaActor):
@@ -30,7 +47,8 @@ class TelegramActor(BaseMediaActor):
         return self.post.text.format(**d)
 
     async def _send_post(
-        self, chat_id: CHAT_ID_TYPE, text: str, photo: Optional[str] = None, **kwargs
+            self, chat_id: CHAT_ID_TYPE, text: str, buttons_info: ButtonsInfoModel, photo: Optional[str] = None,
+            **kwargs
     ):
         ESCAPE_CHARS = [
             ".",
@@ -55,14 +73,16 @@ class TelegramActor(BaseMediaActor):
         for char in ESCAPE_CHARS:
             text = text.replace(char, f"\{char}")
 
-        bot = telebot.TeleBot(self.media_session.access_token, parse_mode="MarkdownV2")
+        bot = Bot(self.media_session.access_token)
         logging.info([chat_id, text, photo])
+        reply_markup = await generate_buttons_markup(buttons_info)
         if photo:
-            msg = bot.send_photo(chat_id=chat_id, caption=text, photo=open(photo, "rb"))
+            msg = await bot.send_photo(chat_id=chat_id, caption=text, photo=FSInputFile(photo),
+                                       reply_markup=reply_markup, parse_mode=ParseMode.MARKDOWN_V2)
         else:
-            msg = bot.send_message(
+            msg = await bot.send_message(
                 chat_id=chat_id,
-                text=text,
+                text=text, reply_markup=reply_markup, parse_mode=ParseMode.MARKDOWN_V2
             )
         logging.info(msg)
         return True  # TODO: make sure message is sent

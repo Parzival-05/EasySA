@@ -13,3 +13,4 @@ class PostActionButtons(StrEnum):
     DELETE = "Удалить пост"
     SET_AS_ACTIVE = "Сделать активным"
     SET_AS_INACTIVE = "Сделать неактивным"
+    EDIT_BUTTONS = "Изменить кнопки"
