@@ -6,6 +6,7 @@ class EditPostState(StatesGroup):
     EDIT_NAME = State()
     EDIT_TEXT = State()
     CONFIRM_DELETION = State()
+    EDIT_BUTTONS = State()
 
 
 class AddPostState(StatesGroup):

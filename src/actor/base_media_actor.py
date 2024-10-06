@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import TypeVar, Optional
 
 from src.db.models.media_model import MediaSessionModel
-from src.db.models.post_model import PostModel
+from src.db.models.post_model import PostModel, ButtonsInfoModel
 from src.db.models.streamer_model import StreamerModel
 from src.domain.stream_platforms.sessions.base_platform_session import StreamInfo
 
@@ -34,11 +34,12 @@ class BaseMediaActor(ABC):
 
     @abstractmethod
     async def _send_post(
-            self, chat_id: CHAT_ID_TYPE, text: str, photo: Optional[str] = None, **kwargs
+            self, chat_id: CHAT_ID_TYPE, text: str, buttons_info: ButtonsInfoModel, photo: Optional[str] = None,
+            **kwargs
     ): ...
 
     async def send_post(self):
         chat_id = self.get_chat_id()
         text = self._get_text()
         preview = self.post.preview.file_path if self.post.preview.file_path else self.stream_info.preview
-        return await self._send_post(chat_id, text, preview)
+        return await self._send_post(chat_id=chat_id, text=text, buttons_info=self.post.buttons_info, photo=preview)

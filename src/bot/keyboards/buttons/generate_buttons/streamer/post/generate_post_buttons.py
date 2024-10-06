@@ -42,6 +42,7 @@ async def get_post_actions_inline_keyboard(post: PostModel):
         PostActionButtons.EDIT_NAME,
         PostActionButtons.EDIT_TEXT,
         PostActionButtons.DELETE,
+        PostActionButtons.EDIT_BUTTONS,
         (
             PostActionButtons.SET_AS_INACTIVE
             if post.is_active

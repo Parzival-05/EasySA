@@ -6,12 +6,12 @@ import requests
 
 from src.actor.base_media_actor import BaseMediaActor
 from src.checker.post_info import PostVariables
+from src.db.models.post_model import ButtonsInfoModel
 from src.domain.stream_platforms.get_by_name import get_stream_platform_profile_class
 from src.domain.stream_platforms.profiles.base_stream_profile import StreamProfileInfo
 
 
 class DiscordActor(BaseMediaActor):
-
     CHAT_ID_TYPE = int
 
     def get_chat_id(self) -> Optional[CHAT_ID_TYPE]:
@@ -31,7 +31,8 @@ class DiscordActor(BaseMediaActor):
         return self.post.text.format(**d)
 
     async def _send_post(
-        self, chat_id: CHAT_ID_TYPE, text: str, photo: Optional[str] = None, **kwargs
+            self, chat_id: CHAT_ID_TYPE, text: str, buttons_info: ButtonsInfoModel, photo: Optional[str] = None,
+            **kwargs
     ):
         payload = {"content": text}
         headers = {

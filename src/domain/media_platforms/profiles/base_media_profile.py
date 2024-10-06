@@ -9,7 +9,7 @@ from src.db.models.media_model import MediaSessionModel, MediaPlatformModel
 class BaseMediaProfileInfo(BaseModel, ABC):
     @abstractmethod
     def create_model(
-        self, name: str, media_platform: MediaPlatformModel, is_active: bool = True
+            self, name: str, media_platform: MediaPlatformModel, is_active: bool = True
     ) -> MediaSessionModel: ...
 
 
@@ -46,6 +46,7 @@ class BaseMediaProfile(ABC):
     @property
     @abstractmethod
     def PROFILE_INFO_PARSER(self) -> Type[BaseMediaProfileInfoParser]: ...
+
     @property
     @abstractmethod
     def VALIDATOR(self) -> Type[BaseMediaProfileValidator]: ...
